@@ -1,0 +1,42 @@
+<idea-plugin>
+  <id>com.maff.codingcounter</id>
+  <name>Coding counter</name>
+  <version>0.1</version>
+  <vendor email="michael.shtmn@gmail.com">Michael Shtutman</vendor>
+
+  <description><![CDATA[
+      Provides different typing statistics (adding, deleting, coping, pasting, etc.).<br>
+      There are plans to add more complicated metrics in future.
+
+      For more details see <a href="https://github.com/maff91/Coding-Counter">project page on github</a>.
+    ]]></description>
+
+  <!--<change-notes><![CDATA[-->
+      <!--Add change notes here.<br>-->
+      <!--<em>most HTML tags may be used</em>-->
+    <!--]]>-->
+  <!--</change-notes>-->
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="145.0"/>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.lang</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <toolWindow
+            id="Coding Stats"
+            anchor="right"
+            factoryClass="com.maff.codingcounter.ui.StatsWindowFactory"
+            icon="/img/ic_chart_bar.png"/>
+
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <application-components>
+    <component>
+      <implementation-class>com.maff.codingcounter.AppComponent</implementation-class>
+    </component>
+  </application-components>
+</idea-plugin>
