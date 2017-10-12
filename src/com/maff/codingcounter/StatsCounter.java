@@ -19,6 +19,7 @@ public class StatsCounter {
     private CodingStats stats;
     private Calendar lastEventTime;
     private long lastTypeTime;
+    private final Object statsMutex = new Object();
 
     public StatsCounter(CodingStats stats)
     {
@@ -62,17 +63,17 @@ public class StatsCounter {
         boolean forceUpdate = false;
 
         if(newEventTime.get(Calendar.MONTH) != lastEventTime.get(Calendar.MONTH)) {
-            stats.periods.put(Period.Month, new PeriodStats());
+            stats.periods.put(Period.MONTH, new PeriodStats());
             forceUpdate = true;
         }
 
         if(forceUpdate || newEventTime.get(Calendar.WEEK_OF_YEAR) != lastEventTime.get(Calendar.WEEK_OF_YEAR)) {
-            stats.periods.put(Period.Week, new PeriodStats());
+            stats.periods.put(Period.WEEK, new PeriodStats());
             forceUpdate = true;
         }
 
         if(forceUpdate || newEventTime.get(Calendar.DAY_OF_YEAR) != lastEventTime.get(Calendar.DAY_OF_YEAR)) {
-            stats.periods.put(Period.Today, new PeriodStats());
+            stats.periods.put(Period.TODAY, new PeriodStats());
         }
 
         lastEventTime = newEventTime;
@@ -110,12 +111,14 @@ public class StatsCounter {
 
             boolean isImmediate = (System.currentTimeMillis() - lastTypeTime) < IMMEDIATE_BACKSPACE_THRESHOLD;
 
-            for (PeriodStats period : stats.periods.values()) {
-                period.backDel += editor.getCaretModel().getCaretCount();
-                period.remove += selectedCount;
+            synchronized (statsMutex) {
+                for (PeriodStats period : stats.periods.values()) {
+                    period.backDel += editor.getCaretModel().getCaretCount();
+                    period.remove += selectedCount;
 
-                if(isImmediate) {
-                    period.backImmediate += caretCount;
+                    if (isImmediate) {
+                        period.backImmediate += caretCount;
+                    }
                 }
             }
         }
@@ -126,8 +129,10 @@ public class StatsCounter {
             Editor editor = TextComponentEditorAction.getEditorFromContext(dataContext);
             int selectedCount = editor.getSelectionModel().getSelectedText(true).length();
 
-            for (PeriodStats period : stats.periods.values()) {
-                period.copyCut += selectedCount;
+            synchronized (statsMutex) {
+                for (PeriodStats period : stats.periods.values()) {
+                    period.copyCut += selectedCount;
+                }
             }
         }
         else if(action instanceof PasteAction)
@@ -144,15 +149,23 @@ public class StatsCounter {
                 pasteCount = ((String)copyPasteManager.getContents(DataFlavor.stringFlavor)).length();
             }
 
-            for (PeriodStats period : stats.periods.values()) {
-                period.remove += selectedCount;
-                period.paste += pasteCount;
+            synchronized (statsMutex) {
+                for (PeriodStats period : stats.periods.values()) {
+                    period.remove += selectedCount;
+                    period.paste += pasteCount;
+                }
             }
         }
     }
 
+    /**
+     * Thread safe, returns a copy!
+     * @return Copy instance of the latest stats
+     */
     public CodingStats getStats()
     {
-        return stats;
+        synchronized (statsMutex) {
+            return new CodingStats(stats);
+        }
     }
 }

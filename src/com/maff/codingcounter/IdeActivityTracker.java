@@ -1,6 +1,7 @@
 package com.maff.codingcounter;
 
 import com.intellij.concurrency.JobScheduler;
+import com.intellij.ide.util.projectWizard.actions.ProjectSpecificAction;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
@@ -13,6 +14,8 @@ import com.intellij.openapi.actionSystem.ex.AnActionListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Disposer;
+import com.intellij.openapi.wm.impl.ProjectWindowAction;
+import com.intellij.platform.AttachProjectAction;
 import com.maff.codingcounter.data.CodingStats;
 import com.maff.codingcounter.data.StatsRepository;
 
@@ -64,6 +67,14 @@ public class IdeActivityTracker implements Disposable
 
     private void startActionListener(Disposable parentDisposable)
     {
+
+//        ProjectManager.getInstance().addpr(s, new ProjectManagerListener() {
+//            @Override
+//            public void projectOpened(Project project) {
+//
+//            }
+//        });
+
         ActionManager.getInstance().addAnActionListener(new AnActionListener() {
                     @Override
                     public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
@@ -72,7 +83,15 @@ public class IdeActivityTracker implements Disposable
 
                     @Override
                     public void afterActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
-                        // Do nothing
+                        if(action instanceof AttachProjectAction){
+                            notifyError(new Throwable("AttachProjectAction"));
+                        }
+                        if(action instanceof ProjectSpecificAction){
+                            notifyError(new Throwable("ProjectSpecificAction"));
+                        }
+                        if(action instanceof ProjectWindowAction){
+                            notifyError(new Throwable("ProjectWindowAction"));
+                        }
                     }
 
                     @Override
@@ -106,8 +125,19 @@ public class IdeActivityTracker implements Disposable
     }
 
     @Override
-    public void dispose() {
-        saveFuture.cancel(true);
+    public void dispose()
+    {
+        saveFuture.cancel(false);
         saveStats();
+    }
+
+    public CodingStats getStats()
+    {
+        return statsCounter.getStats();
+    }
+
+    public void resetStats()
+    {
+        statsCounter = new StatsCounter(new CodingStats());
     }
 }
