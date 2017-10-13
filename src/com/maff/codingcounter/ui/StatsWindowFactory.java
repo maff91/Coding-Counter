@@ -91,7 +91,7 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
         {
             contentWrapper.add(Box.createRigidArea(new Dimension(1, 12)));
 
-            JLabel periodNameLabel = new JLabel(period.toString());
+            JLabel periodNameLabel = new JLabel(UiStrings.PERIOD_LABELS.get(period));
             periodNameLabel.setFont(captionFont);
             periodNameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             contentWrapper.add(periodNameLabel);

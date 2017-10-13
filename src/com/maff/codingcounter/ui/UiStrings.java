@@ -14,7 +14,7 @@ public class UiStrings
         PERIOD_LABELS.put(Period.TODAY, "Today");
         PERIOD_LABELS.put(Period.WEEK, "This Week");
         PERIOD_LABELS.put(Period.MONTH, "This Month");
-        PERIOD_LABELS.put(Period.ALL_TIME, "All Times");
+        PERIOD_LABELS.put(Period.ALL_TIME, "All Time");
     }
 
     // Labels for different counters
