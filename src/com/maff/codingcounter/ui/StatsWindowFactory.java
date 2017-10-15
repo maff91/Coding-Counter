@@ -84,8 +84,8 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
 
         contentWrapper.add(Box.createRigidArea(new Dimension(1, 8)));
 
-        Label waringText = new Label(UiStrings.WARNING_UI_PERIOD);
-        waringText.setAlignment(Label.CENTER);
+        JLabel waringText = new JLabel(UiStrings.WARNING_UI_PERIOD);
+        waringText.setAlignmentX(Component.CENTER_ALIGNMENT);
         contentWrapper.add(waringText);
 
         Font captionFont = UIManager.getFont("Label.font").deriveFont(Font.BOLD);
