@@ -55,7 +55,10 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
 
         callback = ApplicationManager.getApplication().getComponent(AppComponent.class);
 
-        clearStatsButton.addActionListener((action) -> callback.onStatsResetClicked());
+        clearStatsButton.addActionListener((action) -> {
+            callback.onStatsResetClicked();
+            updateData();
+        });
 
         // Schedule periodic update task
         updateTask = JobScheduler.getScheduler().scheduleWithFixedDelay(
