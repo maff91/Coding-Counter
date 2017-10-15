@@ -2,6 +2,7 @@ package com.maff.codingcounter;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actions.*;
@@ -102,22 +103,29 @@ public class StatsCounter {
             return;
         }
 
+        Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
+        if(editor == null) {
+            //The event is related to another IDE input rather than editor
+            return;
+        }
+
+        String selectedText = editor.getSelectionModel().getSelectedText(true);
+        int selectedCount = selectedText != null ? selectedText.length() : 0;
+
         if(action instanceof BackspaceAction || action instanceof DeleteAction) {
             ensureTimePeriods();
 
-            Editor editor = TextComponentEditorAction.getEditorFromContext(dataContext);
-            int selectedCount = editor.getSelectionModel().getSelectedText(true).length();
             int caretCount = editor.getCaretModel().getCaretCount();
 
             boolean isImmediate = (System.currentTimeMillis() - lastTypeTime) < IMMEDIATE_BACKSPACE_THRESHOLD;
 
             synchronized (statsMutex) {
                 for (PeriodStats period : stats.periods.values()) {
-                    period.backDel += editor.getCaretModel().getCaretCount();
-                    period.remove += selectedCount;
+                    period.backDel += 1;
+                    period.remove += selectedCount > 0 ? selectedCount : caretCount;
 
                     if (isImmediate) {
-                        period.backImmediate += caretCount;
+                        period.backImmediate += 1;
                     }
                 }
             }
@@ -125,9 +133,6 @@ public class StatsCounter {
         else if(action instanceof CopyAction || action instanceof CutAction)
         {
             ensureTimePeriods();
-
-            Editor editor = TextComponentEditorAction.getEditorFromContext(dataContext);
-            int selectedCount = editor.getSelectionModel().getSelectedText(true).length();
 
             synchronized (statsMutex) {
                 for (PeriodStats period : stats.periods.values()) {
@@ -139,9 +144,6 @@ public class StatsCounter {
         {
             ensureTimePeriods();
 
-            Editor editor = TextComponentEditorAction.getEditorFromContext(dataContext);
-
-            int selectedCount = editor.getSelectionModel().getSelectedText(true).length();
             int pasteCount = 0;
 
             CopyPasteManager copyPasteManager = CopyPasteManager.getInstance();
