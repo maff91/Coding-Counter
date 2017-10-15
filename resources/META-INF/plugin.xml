@@ -1,13 +1,13 @@
 <idea-plugin>
   <id>com.maff.codingcounter</id>
   <name>Coding counter</name>
-  <version>0.1</version>
+  <version>0.2</version>
   <vendor email="michael.shtmn@gmail.com">Michael Shtutman</vendor>
 
   <description><![CDATA[
       Provides different typing statistics (adding, deleting, coping, pasting, etc.).<br>
       There are plans to add more complicated metrics in future.
-
+      <br><br>
       For more details see <a href="https://github.com/maff91/Coding-Counter">project page on github</a>.
     ]]></description>
 
