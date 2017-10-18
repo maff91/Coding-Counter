@@ -2,8 +2,6 @@
 
 Simple coding statistics plugin for Intellij IDEA and Android Studio.
 
-### The plugin is under testing yet, will be added to the plugins repositpry soon! 
-
 ![Screenshot](https://github.com/maff91/Coding-Counter/blob/master/assets/screenshot.png)
 
 # Features
@@ -24,5 +22,9 @@ Divides statistics for such periods:
 
 # Usage
  
- - File -> Settings -> Plugins -> Browse repositories/
+ - File -> Settings -> Plugins -> Browse repositories -> Find and install Coding Counter"
  - To see statistics go to View -> Tool Windows -> Coding Counter.
+
+# Licence
+
+[MIT](https://opensource.org/licenses/MIT)

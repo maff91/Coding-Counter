@@ -1,14 +1,40 @@
 <idea-plugin>
   <id>com.maff.codingcounter</id>
   <name>Coding counter</name>
-  <version>0.2</version>
+  <version>0.3</version>
   <vendor email="michael.shtmn@gmail.com">Michael Shtutman</vendor>
 
   <description><![CDATA[
       Provides different typing statistics (adding, deleting, coping, pasting, etc.).<br>
       There are plans to add more complicated metrics in future.
+
       <br><br>
-      For more details see <a href="https://github.com/maff91/Coding-Counter">project page on github</a>.
+      <a href="https://github.com/maff91/Coding-Counter">Project page on Github</a>.
+      <br><br>
+
+      <h2>Features</h2>
+
+      Counts such parameters for all open projects simultaneously:
+      <ul>
+        <li>Chars typed.</li>
+        <li>Backspace/Del pressed.</li>
+        <li>Corrections with backspace (backspace pressed within 1 second after typing).</li>
+        <li>Chars cut (Cmd-X).</li>
+        <li>Total chars removed (cut, del, backspace).</li>
+        <li>Total chars added (typed, pasted).</li>
+      </ul
+      <br>
+
+      Divides statistics for such periods:
+      <ul>
+        <li>Today.</li>
+        <li>Last Week.</li>
+        <li>Last Month.</li>
+        <li>All time.</li>
+      </ul>
+
+      <h2>Usage</h2>
+      To see statistics go to View -> Tool Windows -> Coding Counter.
     ]]></description>
 
   <!--<change-notes><![CDATA[-->
