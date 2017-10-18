@@ -151,7 +151,7 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
                 tableModel.setValueAt(UiStrings.LABEL_STAT_TYPE, 0, 0);
                 tableModel.setValueAt(UiStrings.LABEL_STAT_BACK_DEL, 1, 0);
                 tableModel.setValueAt(UiStrings.LABEL_STAT_BACK_IMMEDIATE, 2, 0);
-                tableModel.setValueAt(UiStrings.LABEL_STAT_COPY_CUT, 3,0);
+                tableModel.setValueAt(UiStrings.LABEL_STAT_CUT, 3,0);
                 tableModel.setValueAt(UiStrings.LABEL_STAT_PASTE, 4, 0);
                 tableModel.setValueAt(UiStrings.LABEL_STAT_REMOVE, 5, 0);
                 tableModel.setValueAt(UiStrings.LABEL_STAT_INSERTED, 6, 0);
@@ -162,7 +162,7 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
             tableModel.setValueAt(prettifyLong(periodStats.type), 0, 1);
             tableModel.setValueAt(prettifyLong(periodStats.backDel), 1, 1);
             tableModel.setValueAt(prettifyLong(periodStats.backImmediate), 2, 1);
-            tableModel.setValueAt(prettifyLong(periodStats.copyCut), 3, 1);
+            tableModel.setValueAt(prettifyLong(periodStats.cut), 3, 1);
             tableModel.setValueAt(prettifyLong(periodStats.paste), 4, 1);
             tableModel.setValueAt(prettifyLong(periodStats.remove), 5, 1);
             tableModel.setValueAt(prettifyLong(periodStats.insert), 6, 1);

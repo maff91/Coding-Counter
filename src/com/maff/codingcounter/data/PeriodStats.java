@@ -5,7 +5,7 @@ public class PeriodStats
     public int type;
     public int backDel;
     public int backImmediate;
-    public int copyCut;
+    public int cut;
     public int paste;
     public int remove;
     public int insert;
@@ -17,7 +17,7 @@ public class PeriodStats
         type = other.type;
         backDel = other.backDel;
         backImmediate = other.backImmediate;
-        copyCut = other.copyCut;
+        cut = other.cut;
         paste = other.paste;
         remove = other.remove;
         insert = other.insert;

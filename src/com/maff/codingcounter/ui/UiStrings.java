@@ -21,7 +21,7 @@ public class UiStrings
     public static String LABEL_STAT_TYPE = "Chars typed";
     public static String LABEL_STAT_BACK_DEL = "Backspace/Del pressed";
     public static String LABEL_STAT_BACK_IMMEDIATE = "Backspace corrections";
-    public static String LABEL_STAT_COPY_CUT = "Chars copied/cut";
+    public static String LABEL_STAT_CUT = "Chars cut";
     public static String LABEL_STAT_PASTE = "Chars pasted";
     public static String LABEL_STAT_REMOVE = "Total chars removed";
     public static String LABEL_STAT_INSERTED = "Total chars added";

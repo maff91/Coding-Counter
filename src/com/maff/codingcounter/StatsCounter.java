@@ -130,13 +130,14 @@ public class StatsCounter {
                 }
             }
         }
-        else if(action instanceof CopyAction || action instanceof CutAction)
+        else if(action instanceof CutAction)
         {
             ensureTimePeriods();
 
             synchronized (statsMutex) {
                 for (PeriodStats period : stats.periods.values()) {
-                    period.copyCut += selectedCount;
+                    period.cut += selectedCount;
+                    period.remove += selectedCount;
                 }
             }
         }

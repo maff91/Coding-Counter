@@ -12,7 +12,7 @@ Counts such parameters for all open projects simultaneously:
 - Chars typed.
 - Backspace/Del pressed.
 - Corrections with backspace (backspace pressed within 1 second after typing).
-- Chars copied/cut (Cmd-C, Cmd-X).
+- Chars cut (Cmd-X).
 - Total chars removed (cut, del, backspace).
 - Total chars added (typed, pasted).
 
