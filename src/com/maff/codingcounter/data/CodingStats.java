@@ -19,6 +19,7 @@ public class CodingStats
         this();
 
         version = other.version;
+        lastEventTime = other.lastEventTime;
 
         for (Map.Entry<Period, PeriodStats> entry : other.periods.entrySet()) {
             periods.put(entry.getKey(), new PeriodStats(entry.getValue()));
