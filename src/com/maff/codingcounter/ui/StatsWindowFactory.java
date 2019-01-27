@@ -64,7 +64,8 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
         updateTask = JobScheduler.getScheduler().scheduleWithFixedDelay(
                 () -> {
                     if(window.isVisible()) {
-                        updateData();
+                        // Avoid updating UI from the background thread
+                        ApplicationManager.getApplication().invokeLater(this::updateData);
                     }
                 },
                 0,
