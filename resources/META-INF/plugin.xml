@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.maff.codingcounter</id>
   <name>Coding counter</name>
-  <version>0.3</version>
+  <version>0.4</version>
   <vendor email="michael.shtmn@gmail.com">Michael Shtutman</vendor>
 
   <description><![CDATA[
@@ -35,6 +35,14 @@
 
       <h2>Usage</h2>
       To see statistics go to View -> Tool Windows -> Coding Counter.
+
+      <h2>Change Log<h2/>
+
+      v0.4:
+      <ul>
+        <li>Fix rare IDE freezing due to UI thread deadlock.</li>
+        <li>Fix bug when statistics for month and week incorrectly shown</li>
+      </ul>
     ]]></description>
 
   <!--<change-notes><![CDATA[-->
