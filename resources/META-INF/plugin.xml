@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.maff.codingcounter</id>
   <name>Coding counter</name>
-  <version>0.4</version>
+  <version>0.5</version>
   <vendor email="michael.shtmn@gmail.com">Michael Shtutman</vendor>
 
   <description><![CDATA[
@@ -41,7 +41,15 @@
       v0.4:
       <ul>
         <li>Fix rare IDE freezing due to UI thread deadlock.</li>
-        <li>Fix bug when statistics for month and week incorrectly shown</li>
+        <li>Fix bug when statistics for month and week incorrectly shown.</li>
+      </ul>
+
+      v0.5:
+      <ul>
+        <li>Rewrite code in order to avoid using deprecated APIs.</li>
+        <li>Properly support multiple open projects.</li>
+        <li>Statistics updates immediately.</li>
+        <li>Bump min supported IDEA version to 183.2153.8.</li>
       </ul>
     ]]></description>
 
