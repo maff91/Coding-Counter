@@ -30,7 +30,7 @@ public class IdeActivityTracker implements Disposable
     private StatsRepository repository;
     private StatsCounter statsCounter;
 
-    private ScheduledFuture saveFuture;
+    private ScheduledFuture<?> saveFuture;
 
     public IdeActivityTracker(StatsRepository repository, Disposable parentDisposable)
     {
