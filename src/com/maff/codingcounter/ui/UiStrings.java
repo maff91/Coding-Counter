@@ -29,6 +29,4 @@ public class UiStrings
     // Table columns labels
     public static final String COLUMN_LABEL = "Counter";
     public static final String COLUMN_VALUE = "Value";
-
-    public static final String WARNING_UI_PERIOD = "Note: UI updates every %d sec!";
 }

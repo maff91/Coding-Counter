@@ -1,19 +1,16 @@
 package com.maff.codingcounter;
 
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.actionSystem.ex.AnActionListener;
-import com.intellij.openapi.diagnostic.Logger;
 import com.maff.codingcounter.data.CodingStats;
 
 public class IdeActivityTracker
 {
-    private Logger log = Logger.getInstance(IdeActivityTracker.class);
-
     private StatsCounter statsCounter;
+    private Callback callback;
 
     public IdeActivityTracker(CodingStats stats)
     {
@@ -27,11 +24,13 @@ public class IdeActivityTracker
                                                             @Override
                                                             public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
                                                                 statsCounter.onAction(action, dataContext, event);
+                                                                notifyChange();
                                                             }
 
                                                             @Override
                                                             public void beforeEditorTyping(char c, DataContext dataContext) {
                                                                 statsCounter.onType(c, dataContext);
+                                                                notifyChange();
                                                             }
                                                         },
                 () -> {
@@ -39,17 +38,11 @@ public class IdeActivityTracker
                 });
     }
 
-//    private void notifyError(Throwable error)
-//    {
-//        ApplicationManager.getApplication().invokeLater(() -> {
-//            String messageString = error.getMessage();
-//            String title = "Coding Counter";
-//            String groupDisplayId = "Coding Counter";
-//
-//            Notification notification = new Notification(groupDisplayId, title, messageString, NotificationType.ERROR);
-//            ApplicationManager.getApplication().getMessageBus().syncPublisher(Notifications.TOPIC).notify(notification);
-//        });
-//    }
+    private void notifyChange() {
+        if(callback != null) {
+            callback.onStatsChanged(statsCounter.getStats());
+        }
+    }
 
     public CodingStats getStats()
     {
@@ -59,5 +52,14 @@ public class IdeActivityTracker
     public void resetStats()
     {
         statsCounter = new StatsCounter(new CodingStats());
+        notifyChange();
+    }
+
+    public void setCallback(Callback callback) {
+        this.callback = callback;
+    }
+
+    public interface Callback {
+        void onStatsChanged(CodingStats stats);
     }
 }

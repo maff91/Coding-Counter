@@ -49,11 +49,15 @@ public class CodingCounterService implements PersistentStateComponent<CodingStat
         loadState(codingStats);
     }
 
+    public void resetStats() {
+        tracker.resetStats();
+    }
+
     public CodingStats getStats() {
         return tracker.getStats();
     }
 
-    public void resetStats() {
-        tracker.resetStats();
+    public void setCallback(IdeActivityTracker.Callback callback) {
+        tracker.setCallback(callback);
     }
 }

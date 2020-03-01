@@ -23,22 +23,16 @@ import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFactory
-{
-    private final static int UI_UPDATE_PERIOD = 1; // Sec
-
+public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFactory {
     private ToolWindow window;
     private JComponent windowContent;
 
     private JButton clearStatsButton;
 
-    private ScheduledFuture updateTask;
-
     private Map<Period, DefaultTableModel> tables = new HashMap<>();
 
     @Override
-    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow)
-    {
+    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         this.window = toolWindow;
 
         createUi();
@@ -53,24 +47,18 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
 
         clearStatsButton.addActionListener((action) -> {
             CodingCounterService.getInstance().resetStats();
-            updateData();
         });
 
-        // Schedule periodic update task
-        updateTask = JobScheduler.getScheduler().scheduleWithFixedDelay(
-                () -> {
-                    if(window.isVisible()) {
-                        // Avoid updating UI from the background thread
-                        ApplicationManager.getApplication().invokeLater(this::updateData);
-                    }
-                },
-                0,
-                UI_UPDATE_PERIOD,
-                TimeUnit.SECONDS);
+        CodingCounterService.getInstance().setCallback((stats -> {
+            if (window.isVisible()) {
+                // Avoid updating UI from the background thread
+                ApplicationManager.getApplication().invokeLater(() -> updateData(stats));
+            }
+        }));
+        updateData(CodingCounterService.getInstance().getStats());
     }
 
-    private void createUi()
-    {
+    private void createUi() {
         JComponent contentWrapper = new JPanel();
         contentWrapper.setLayout(new BoxLayout(contentWrapper, BoxLayout.PAGE_AXIS));
 
@@ -81,14 +69,9 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
 
         contentWrapper.add(Box.createRigidArea(new Dimension(1, 8)));
 
-        JLabel waringText = new JLabel(String.format(UiStrings.WARNING_UI_PERIOD, UI_UPDATE_PERIOD));
-        waringText.setAlignmentX(Component.CENTER_ALIGNMENT);
-        contentWrapper.add(waringText);
-
         Font captionFont = UIManager.getFont("Label.font").deriveFont(Font.BOLD);
 
-        for(Period period : Period.values())
-        {
+        for (Period period : Period.values()) {
             contentWrapper.add(Box.createRigidArea(new Dimension(1, 12)));
 
             JLabel periodNameLabel = new JLabel(UiStrings.PERIOD_LABELS.get(period));
@@ -127,28 +110,23 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
         contentWrapper.add(Box.createRigidArea(new Dimension(1, 8)));
     }
 
-    private void updateData()
-    {
-        //Obtain fresh data
-        CodingStats stats = CodingCounterService.getInstance().getStats();
-
-        for (Map.Entry<Period, PeriodStats> entry : stats.periods.entrySet())
-        {
+    private void updateData(CodingStats stats) {
+        for (Map.Entry<Period, PeriodStats> entry : stats.periods.entrySet()) {
             // Get table
             DefaultTableModel tableModel = tables.get(entry.getKey());
-            if(tableModel == null) {
+            if (tableModel == null) {
                 continue;
             }
 
             // Ensure size
-            if(tableModel.getRowCount() != 7) {
+            if (tableModel.getRowCount() != 7) {
                 tableModel.setRowCount(7);
                 tableModel.fireTableStructureChanged();
 
                 tableModel.setValueAt(UiStrings.LABEL_STAT_TYPE, 0, 0);
                 tableModel.setValueAt(UiStrings.LABEL_STAT_BACK_DEL, 1, 0);
                 tableModel.setValueAt(UiStrings.LABEL_STAT_BACK_IMMEDIATE, 2, 0);
-                tableModel.setValueAt(UiStrings.LABEL_STAT_CUT, 3,0);
+                tableModel.setValueAt(UiStrings.LABEL_STAT_CUT, 3, 0);
                 tableModel.setValueAt(UiStrings.LABEL_STAT_PASTE, 4, 0);
                 tableModel.setValueAt(UiStrings.LABEL_STAT_REMOVE, 5, 0);
                 tableModel.setValueAt(UiStrings.LABEL_STAT_INSERTED, 6, 0);
@@ -166,15 +144,12 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
         }
     }
 
-    private String prettifyLong(long val)
-    {
-        if(val < 1000) {
+    private String prettifyLong(long val) {
+        if (val < 1000) {
             return String.valueOf(val);
-        }
-        else if(val < 1000000) {
+        } else if (val < 1000000) {
             return String.format("%.2fK", val / 1000.0);
-        }
-        else {
+        } else {
             return String.format("%.2fM", val / 1000000.0);
         }
     }
