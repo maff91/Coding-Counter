@@ -164,30 +164,6 @@ public class StatsCounter {
         }
     }
 
-//    public void handlePasteAction(@NotNull Editor editor) {
-//        ensureTimePeriods();
-//
-//        String selectedText = editor.getSelectionModel().getSelectedText(true);
-//        int selectedCount = selectedText != null ? selectedText.length() : 0;
-//
-//        int pasteCount = 0;
-//
-//        CopyPasteManager copyPasteManager = CopyPasteManager.getInstance();
-//        if(copyPasteManager.areDataFlavorsAvailable(DataFlavor.stringFlavor)) {
-//            String pasteContent = copyPasteManager.getContents(DataFlavor.stringFlavor);
-//            if(pasteContent != null) {
-//                pasteCount = pasteContent.length();
-//            }
-//        }
-//
-//        synchronized (statsMutex) {
-//            for (PeriodStats period : stats.periods.values()) {
-//                period.remove += selectedCount;
-//                period.paste += pasteCount;
-//            }
-//        }
-//    }
-
     /**
      * Thread safe, returns a copy!
      * @return Copy instance of the latest stats

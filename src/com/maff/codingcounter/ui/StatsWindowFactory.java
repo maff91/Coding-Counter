@@ -1,7 +1,7 @@
 package com.maff.codingcounter.ui;
 
-import com.intellij.concurrency.JobScheduler;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
@@ -20,10 +20,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
-public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFactory {
+public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFactory, DumbAware {
     private ToolWindow window;
     private JComponent windowContent;
 
@@ -50,12 +48,15 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
         });
 
         CodingCounterService.getInstance().setCallback((stats -> {
-            if (window.isVisible()) {
-                // Avoid updating UI from the background thread
-                ApplicationManager.getApplication().invokeLater(() -> updateData(stats));
-            }
+            ApplicationManager.getApplication().invokeLater(() -> updateData(stats));
         }));
         updateData(CodingCounterService.getInstance().getStats());
+    }
+
+    @Override
+    public void init(ToolWindow window) {
+        // Ensure the service is running.
+        CodingCounterService.getInstance();
     }
 
     private void createUi() {
