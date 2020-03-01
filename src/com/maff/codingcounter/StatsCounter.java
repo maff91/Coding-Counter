@@ -4,12 +4,15 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actions.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.maff.codingcounter.data.CodingStats;
 import com.maff.codingcounter.data.Period;
 import com.maff.codingcounter.data.PeriodStats;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.util.Calendar;
@@ -160,6 +163,30 @@ public class StatsCounter {
             }
         }
     }
+
+//    public void handlePasteAction(@NotNull Editor editor) {
+//        ensureTimePeriods();
+//
+//        String selectedText = editor.getSelectionModel().getSelectedText(true);
+//        int selectedCount = selectedText != null ? selectedText.length() : 0;
+//
+//        int pasteCount = 0;
+//
+//        CopyPasteManager copyPasteManager = CopyPasteManager.getInstance();
+//        if(copyPasteManager.areDataFlavorsAvailable(DataFlavor.stringFlavor)) {
+//            String pasteContent = copyPasteManager.getContents(DataFlavor.stringFlavor);
+//            if(pasteContent != null) {
+//                pasteCount = pasteContent.length();
+//            }
+//        }
+//
+//        synchronized (statsMutex) {
+//            for (PeriodStats period : stats.periods.values()) {
+//                period.remove += selectedCount;
+//                period.paste += pasteCount;
+//            }
+//        }
+//    }
 
     /**
      * Thread safe, returns a copy!

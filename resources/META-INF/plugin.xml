@@ -45,12 +45,6 @@
       </ul>
     ]]></description>
 
-  <!--<change-notes><![CDATA[-->
-      <!--Add change notes here.<br>-->
-      <!--<em>most HTML tags may be used</em>-->
-    <!--]]>-->
-  <!--</change-notes>-->
-
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
   <idea-version since-build="181.0"/>
 
@@ -65,12 +59,7 @@
             factoryClass="com.maff.codingcounter.ui.StatsWindowFactory"
             icon="/img/ic_chart_bar.png"/>
 
-    <!-- Add your extensions here -->
+    <applicationService serviceImplementation="com.maff.codingcounter.CodingCounterService"/>
+    <postStartupActivity implementation="com.maff.codingcounter.CounterStartupActivity"/>
   </extensions>
-
-  <application-components>
-    <component>
-      <implementation-class>com.maff.codingcounter.AppComponent</implementation-class>
-    </component>
-  </application-components>
 </idea-plugin>

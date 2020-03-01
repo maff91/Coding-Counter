@@ -9,7 +9,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.table.JBTable;
-import com.maff.codingcounter.AppComponent;
+import com.maff.codingcounter.CodingCounterService;
 import com.maff.codingcounter.data.CodingStats;
 import com.maff.codingcounter.data.Period;
 import com.maff.codingcounter.data.PeriodStats;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFactory
 {
-    private final static int UI_UPDATE_PERIOD = 5; // Sec
+    private final static int UI_UPDATE_PERIOD = 1; // Sec
 
     private ToolWindow window;
     private JComponent windowContent;
@@ -35,8 +35,6 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
     private ScheduledFuture updateTask;
 
     private Map<Period, DefaultTableModel> tables = new HashMap<>();
-
-    private Callback callback;
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow)
@@ -53,10 +51,8 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
         Content content = contentFactory.createContent(toolWindowPanel, "", false);
         window.getContentManager().addContent(content);
 
-        callback = ApplicationManager.getApplication().getComponent(AppComponent.class);
-
         clearStatsButton.addActionListener((action) -> {
-            callback.onStatsResetClicked();
+            CodingCounterService.getInstance().resetStats();
             updateData();
         });
 
@@ -85,7 +81,7 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
 
         contentWrapper.add(Box.createRigidArea(new Dimension(1, 8)));
 
-        JLabel waringText = new JLabel(UiStrings.WARNING_UI_PERIOD);
+        JLabel waringText = new JLabel(String.format(UiStrings.WARNING_UI_PERIOD, UI_UPDATE_PERIOD));
         waringText.setAlignmentX(Component.CENTER_ALIGNMENT);
         contentWrapper.add(waringText);
 
@@ -134,7 +130,7 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
     private void updateData()
     {
         //Obtain fresh data
-        CodingStats stats = callback.getStats();
+        CodingStats stats = CodingCounterService.getInstance().getStats();
 
         for (Map.Entry<Period, PeriodStats> entry : stats.periods.entrySet())
         {
@@ -181,11 +177,5 @@ public class StatsWindowFactory implements com.intellij.openapi.wm.ToolWindowFac
         else {
             return String.format("%.2fM", val / 1000000.0);
         }
-    }
-
-    public interface Callback
-    {
-        CodingStats getStats();
-        void onStatsResetClicked();
     }
 }
