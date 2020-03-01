@@ -84,7 +84,7 @@ public class StatsCounter {
         stats.lastEventTime = lastEventTime.getTimeInMillis();
     }
 
-    public void onType(char c, DataContext dataContext)
+    public boolean onType(char c, DataContext dataContext)
     {
         ensureTimePeriods();
 
@@ -98,22 +98,25 @@ public class StatsCounter {
         }
 
         lastTypeTime = System.currentTimeMillis();
+        return true;
     }
 
-    public void onAction(AnAction action, DataContext dataContext, AnActionEvent event)
+    public boolean onAction(AnAction action, DataContext dataContext, AnActionEvent event)
     {
         if (action == null) {
-            return;
+            return false;
         }
 
         Editor editor = CommonDataKeys.EDITOR.getData(dataContext);
         if(editor == null) {
             //The event is related to another IDE input rather than editor
-            return;
+            return false;
         }
 
         String selectedText = editor.getSelectionModel().getSelectedText(true);
         int selectedCount = selectedText != null ? selectedText.length() : 0;
+
+        boolean handled = false;
 
         if(action instanceof BackspaceAction || action instanceof DeleteAction) {
             ensureTimePeriods();
@@ -131,6 +134,7 @@ public class StatsCounter {
                         period.backImmediate += 1;
                     }
                 }
+                handled = true;
             }
         }
         else if(action instanceof CutAction)
@@ -143,6 +147,7 @@ public class StatsCounter {
                     period.remove += selectedCount;
                 }
             }
+            handled = true;
         }
         else if(action instanceof PasteAction)
         {
@@ -161,7 +166,9 @@ public class StatsCounter {
                     period.paste += pasteCount;
                 }
             }
+            handled = true;
         }
+        return handled;
     }
 
     /**

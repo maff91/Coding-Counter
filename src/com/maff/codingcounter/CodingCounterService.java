@@ -11,12 +11,11 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.util.messages.MessageBus;
 import com.intellij.util.messages.MessageBusConnection;
+import com.intellij.util.messages.Topic;
 import com.maff.codingcounter.data.CodingStats;
 import com.maff.codingcounter.data.LegacyStatsRepository;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.concurrent.CopyOnWriteArraySet;
 
 @State(
         name = "CodingCounter",
@@ -28,17 +27,21 @@ import java.util.concurrent.CopyOnWriteArraySet;
         }
 )
 public class CodingCounterService implements PersistentStateComponent<CodingStats>, DumbAware, Disposable {
+    public static Topic<Listener> STATS_CHANGED = Topic.create("Coding stats changed", Listener.class);
 
     public static CodingCounterService getInstance() {
         return ServiceManager.getService(CodingCounterService.class);
     }
 
+    private Listener publisher;
+
     private StatsCounter statsCounter;
-    private Callback callback;
     private MessageBusConnection messageBusConnection;
 
     public CodingCounterService() {
-        messageBusConnection = ApplicationManager.getApplication().getMessageBus().connect();
+        MessageBus messageBus = ApplicationManager.getApplication().getMessageBus();
+        publisher = messageBus.syncPublisher(STATS_CHANGED);
+        messageBusConnection = messageBus.connect();
         messageBusConnection.subscribe(AnActionListener.TOPIC, actionListener);
     }
 
@@ -77,29 +80,29 @@ public class CodingCounterService implements PersistentStateComponent<CodingStat
         return statsCounter.getStats();
     }
 
-    public void setCallback(Callback callback) {
-        this.callback = callback;
-    }
-
     private void notifyChange() {
-        if (callback != null) {
-            callback.onStatsChanged(statsCounter.getStats());
-        }
+        ApplicationManager.getApplication()
+                .getMessageBus()
+                .syncPublisher(STATS_CHANGED)
+                .onStatsChanged(getStats());
     }
 
     private AnActionListener actionListener = new AnActionListener() {
         @Override
         public void beforeActionPerformed(@NotNull AnAction action, @NotNull DataContext dataContext, @NotNull AnActionEvent event) {
             if (statsCounter != null) {
-                statsCounter.onAction(action, dataContext, event);
+                if(statsCounter.onAction(action, dataContext, event)) {
+                    notifyChange();
+                }
             }
-            notifyChange();
         }
 
         @Override
         public void beforeEditorTyping(char c, @NotNull DataContext dataContext) {
             if (statsCounter != null) {
-                statsCounter.onType(c, dataContext);
+                if(statsCounter.onType(c, dataContext)) {
+                    notifyChange();
+                }
             }
             notifyChange();
         }
@@ -108,9 +111,10 @@ public class CodingCounterService implements PersistentStateComponent<CodingStat
     @Override
     public void dispose() {
         messageBusConnection.disconnect();
+        publisher = null;
     }
 
-    public interface Callback {
+    public interface Listener {
         void onStatsChanged(CodingStats stats);
     }
 }
