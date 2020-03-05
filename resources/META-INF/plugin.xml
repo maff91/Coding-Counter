@@ -1,7 +1,7 @@
 <idea-plugin>
   <id>com.maff.codingcounter</id>
   <name>Coding counter</name>
-  <version>0.5</version>
+  <version>0.6</version>
   <vendor email="michael.shtmn@gmail.com">Michael Shtutman</vendor>
 
   <description><![CDATA[
@@ -51,6 +51,9 @@
         <li>Statistics updates immediately.</li>
         <li>Bump min supported IDEA version to 183.2153.8.</li>
       </ul>
+
+      v0.6:
+      Resolve plugin bytecode compatibility issues with Android Studio.
     ]]></description>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->

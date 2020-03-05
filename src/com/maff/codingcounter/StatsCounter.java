@@ -4,15 +4,12 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.Caret;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.actions.*;
 import com.intellij.openapi.ide.CopyPasteManager;
 import com.maff.codingcounter.data.CodingStats;
 import com.maff.codingcounter.data.Period;
 import com.maff.codingcounter.data.PeriodStats;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.awt.datatransfer.DataFlavor;
 import java.util.Calendar;
